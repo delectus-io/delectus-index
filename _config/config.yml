@@ -1,0 +1,13 @@
+---
+Name: delectus-index-config
+After:
+  - 'delectus/*'
+---
+DelectusIndexService:
+  module_name: 'delectus-index'
+  version: 'v1'
+  endpoints:
+    index: 'https://api.delectus.io/'
+#  client_token: ''     these should be set in your website config yaml or can be set in CMS settings tab
+#  client_salt: ''
+#  site_identifier: ''

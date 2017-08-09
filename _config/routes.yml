@@ -1,0 +1,6 @@
+---
+Name: delectus-index-routes
+---
+Director:
+  rules:
+    'delectus-callback/index/$Action!': DelectusIndexCallbackController

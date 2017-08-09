@@ -1,0 +1,6 @@
+en:
+  Delectus:
+    ClientTokenFieldLabel: 'Client Token'
+    ClientTokenDescription: 'Enter the client token from your Delectus client account, or configure in SilverStripe'
+    ClientSaltFieldLabel: 'Client Salt'
+    ClientSaltDescription: 'Enter the client salt from your Delectus client account, or configure in SilverStripe'
