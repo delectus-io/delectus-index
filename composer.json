@@ -22,7 +22,7 @@
 		"php": ">=5.6",
 		"composer/installers": "*",
 		"silverstripe/framework": "3.x@stable",
-		"delectus-io/delectus": "self"
+		"delectus-io/delectus": "self.version"
 	},
 	"repositories": [
 		{
