@@ -17,6 +17,12 @@ class DelectusIndexService extends DelectusApiRequestService {
 	const TypeFile = 1;
 	const TypePage = 2;
 
+	// hint when the request should be sent (relative to now, strtotime compatible)
+	private static $request_delay = '+1 min';
+
+	// hint when the request should be processed by backend (relative to when it is received, strtotime compatible)
+	private static $backend_delay = '+1 min';
+
 	/**
 	 * @param SiteTree|int|string $pageOrLinkOrID
 	 *

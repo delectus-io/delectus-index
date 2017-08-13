@@ -5,11 +5,9 @@ After:
 ---
 File:
   extensions:
-    - DelectusDataObjectExtension
     - DelectusIndexFileExtension
 Page:
   extensions:
-    - DelectusDataObjectExtension
     - DelectusIndexPageExtension
 SiteConfig:
   extensions:

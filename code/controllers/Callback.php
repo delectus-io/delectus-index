@@ -4,7 +4,7 @@ use DelectusModule as Module;
  * DelectusCallbackController accepts callbacks from Delectus services to indicate that a request has completed.
  */
 class DelectusIndexCallbackController extends DelectusCallbackController {
-	const ModelClass = DelectusApiRequest::class;
+	const ModelClass = DelectusApiRequestModel::class;
 
 	const ActionAdded     = 'added';
 	const ActionRemoved   = 'removed';
@@ -21,7 +21,7 @@ class DelectusIndexCallbackController extends DelectusCallbackController {
 	];
 
 	public function added( SS_HTTPRequest $request ) {
-		/** @var \DelectusApiRequest $model */
+		/** @var \DelectusApiRequestModel $model */
 		if ( $model = $this->currentModel( ) ) {
 			$data = Module::decode_data( $request->getBody());
 			if ($data['ResponseCode'] == 200) {
@@ -65,9 +65,9 @@ class DelectusIndexCallbackController extends DelectusCallbackController {
 	}
 
 	/**
-	 * Return the model from the request this will be an DelectusApiRequest derived class
+	 * Return the model from the request this will be an DelectusApiRequestModel derived class
 	 *
-	 * @return \DelectusApiRequest
+	 * @return \DelectusApiRequestModel
 	 * @throws \InvalidArgumentException
 	 * @internal param null|\SS_HTTPRequest $request
 	 *
@@ -75,7 +75,7 @@ class DelectusIndexCallbackController extends DelectusCallbackController {
 	public function currentModel( ) {
 		$request     = $this->getRequest();
 		$data        = Module::decode_data( $request->getBody() );
-		return DelectusApiRequest::get()->find(DelectusApiRequest::RequestTokenKey, $data['RequestToken']);
+		return DelectusApiRequestModel::get()->find(DelectusApiRequestModel::RequestTokenKey, $data['RequestToken']);
 	}
 
 	/**
