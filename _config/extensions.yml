@@ -9,6 +9,3 @@ File:
 Page:
   extensions:
     - DelectusIndexPageExtension
-SiteConfig:
-  extensions:
-    - DelectusIndexSiteConfigExtension
