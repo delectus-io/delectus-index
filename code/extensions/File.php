@@ -5,6 +5,10 @@ class DelectusIndexFileExtension extends DelectusDataObjectExtension {
 	// set to false to disable Delectus functions at runtime, e.g. during testing other functionality
 	private static $delectus_enabled = true;
 
+	protected function addDelectusTokenField() {
+		return $this->owner->ParentID != 0;
+	}
+
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
 		if ( $this->owner->isChanged() ) {
