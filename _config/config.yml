@@ -8,9 +8,6 @@ Injector:
     class: DelectusIndexService
 DelectusIndexModule:
   version: 'v1'
-#  client_token: ''     these should be set in your website config yaml or can be set in CMS settings tab
-#  client_salt: ''
-#  site_identifier: ''
 DelectusTransport:
   endpoints:
     index: 'https://api.delectus.io/'

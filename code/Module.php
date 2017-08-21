@@ -6,5 +6,8 @@
  */
 class DelectusIndexModule extends DelectusModule {
 
+	private static $module_name = 'delectus-index';
+
+	const Endpoint = 'index';
 
 }

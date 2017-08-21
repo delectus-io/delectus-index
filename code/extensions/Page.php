@@ -21,7 +21,7 @@ class DelectusIndexPageExtension extends DelectusDataObjectExtension {
 	}
 
 	public function onBeforeDelete() {
-		parent::onAfterDelete();
+		parent::onBeforeDelete();
 		if ($this->enabled()) {
 			$responseMessage = '';
 			$result = DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage );
