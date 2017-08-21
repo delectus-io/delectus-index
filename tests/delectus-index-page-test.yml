@@ -1,0 +1,26 @@
+Permission:
+  admin:
+    Code: 'ADMIN'
+Group:
+  admins:
+    Title: 'Administrators'
+    Code: 'admin'
+    Permissions: '=>Permission.admin'
+Member:
+  admin:
+    Firstname: 'Admin'
+    Surname: 'User'
+    Groups: '=>Group.admins'
+Page:
+  page1:
+    Title: 'Page 1'
+    Content: '<p>I am what I am - Page 1</p>'
+  page2:
+    Title: 'Page 2'
+    Content: '<p>I am what I am - Page 2</p>'
+  page3:
+    Title: 'Page 3'
+    Content: '<p>I am what I am - Page 3</p>'
+  page4:
+    Title: 'Page 4'
+    Content: '<p>I am what I am - Page 4</p>'

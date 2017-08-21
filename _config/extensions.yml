@@ -1,7 +1,7 @@
 ---
 Name: delectus-index-extensions
 After:
-  - 'framework/*'
+  - 'delectus/*'
 ---
 File:
   extensions:

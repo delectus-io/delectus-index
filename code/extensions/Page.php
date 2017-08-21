@@ -6,23 +6,25 @@
  */
 class DelectusIndexPageExtension extends DelectusDataObjectExtension {
 
-	public function onBeforePublish() {
+	public function onAfterPublish() {
 		if ( $this->enabled() ) {
-			DelectusIndexService::add_page( $this->owner, __METHOD__, $responseMessage);
-		}
-
-	}
-
-	public function onAfterUnpublish() {
-		if ( $this->enabled() ) {
-			DelectusIndexService::remove_page( $this->owner, __METHOD__, $responseMessage);
+			$responseMessage = '';
+			$result = DelectusIndexModule::index_service()->addPage( $this->owner, __METHOD__, $responseMessage);
 		}
 	}
 
-	public function onAfterDelete() {
+	public function onBeforeUnpublish() {
+		if ( $this->enabled() ) {
+			$responseMessage = '';
+			$result = DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage);
+		}
+	}
+
+	public function onBeforeDelete() {
 		parent::onAfterDelete();
 		if ($this->enabled()) {
-			DelectusIndexService::remove_page( $this->owner, __METHOD__, $responseMessage );
+			$responseMessage = '';
+			$result = DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
 

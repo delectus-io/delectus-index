@@ -31,7 +31,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 	 * @throws \InvalidArgumentException
 	 *
 	 */
-	public static function add_page( $pageOrLinkOrID, $source, &$responseMessage ) {
+	public function addPage( $pageOrLinkOrID, $source, &$responseMessage ) {
 		$response = null;
 
 		try {
@@ -39,7 +39,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 				if ( $page->ShowInSearch ) {
 					$request = static::log_request( $page, $source, self::ActionAdd );
 
-					$response = static::create()->makeRequest( $request);
+					$response = $this->makeRequest( $request);
 
 					$request->write();
 
@@ -68,13 +68,13 @@ class DelectusIndexService extends DelectusApiRequestService {
 		return $response;
 	}
 
-	public static function remove_page( $pageOrLinkOrID, $source, &$responseMessage ) {
+	public function removePage( $pageOrLinkOrID, $source, &$responseMessage ) {
 		$response = null;
 		try {
 			if ( $page = static::resolve_page( $pageOrLinkOrID ) ) {
 				$request  = static::log_request( $page, $source, self::ActionRemove );
 
-				$response = static::create()->makeRequest( $request );
+				$response = $this->makeRequest( $request );
 
 				$request->write();
 
@@ -94,7 +94,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 		return $response;
 	}
 
-	public static function add_file( $fileOrIDOrPath, $source, &$responseMessage ) {
+	public function addFile( $fileOrIDOrPath, $source, &$responseMessage ) {
 		$response = null;
 
 		try {
@@ -102,7 +102,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 				if ( $file->ShowInSearch ) {
 					$request  = static::log_request( $file, $source, self::ActionAdd );
 
-					$response = static::create()->makeRequest( $request );
+					$response = $this->makeRequest( $request );
 
 					$request->write();
 
@@ -122,7 +122,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 		return $response;
 	}
 
-	public static function remove_file( $fileOrLinkOrID, $source, &$responseMessage ) {
+	public function removeFile( $fileOrLinkOrID, $source, &$responseMessage ) {
 		$response = null;
 		try {
 			if ( $file = static::resolve_file( $fileOrLinkOrID ) ) {
