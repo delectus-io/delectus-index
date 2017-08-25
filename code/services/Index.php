@@ -37,9 +37,25 @@ class DelectusIndexService extends DelectusApiRequestService {
 		try {
 			if ( $page = static::resolve_page( $pageOrLinkOrID ) ) {
 				if ( $page->ShowInSearch ) {
-					$request = static::log_request( $page, $source, self::ActionAdd );
+					$request = static::enqueue_request( $page, $source, self::ActionAdd );
 
-					$response = $this->makeRequest( $request);
+					$resultCode = 0;
+					$resultMessage = '';
+					$result = $this->makeRequest( $request);
+
+					if ($result) {
+						$response = new DelectusIndexResponse(
+							DelectusIndexResponse::ResponseCodeOK,
+							$resultMessage,
+							$result
+						);
+					} else {
+						$response = new DelectusErrorResponse(
+							$resultCode,
+							$resultMessage,
+							$result
+						);
+					}
 
 					$request->write();
 
@@ -72,7 +88,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 		$response = null;
 		try {
 			if ( $page = static::resolve_page( $pageOrLinkOrID ) ) {
-				$request  = static::log_request( $page, $source, self::ActionRemove );
+				$request  = static::enqueue_request( $page, $source, self::ActionRemove );
 
 				$response = $this->makeRequest( $request );
 
@@ -100,7 +116,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 		try {
 			if ( $file = static::resolve_file( $fileOrIDOrPath ) ) {
 				if ( $file->ShowInSearch ) {
-					$request  = static::log_request( $file, $source, self::ActionAdd );
+					$request  = static::enqueue_request( $file, $source, self::ActionAdd );
 
 					$response = $this->makeRequest( $request );
 
@@ -126,7 +142,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 		$response = null;
 		try {
 			if ( $file = static::resolve_file( $fileOrLinkOrID ) ) {
-				$request  = static::log_request( $file, $source, self::ActionAdd );
+				$request  = static::enqueue_request( $file, $source, self::ActionRemove );
 
 				$response = static::create()->makeRequest( $request );
 

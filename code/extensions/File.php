@@ -15,10 +15,18 @@ class DelectusIndexFileExtension extends DelectusDataObjectExtension {
 			if ( $this->enabled() ) {
 				if ( ! $this->owner->hasExtension( Versioned::class ) ) {
 					$responseMessage = '';
-					$result = DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
+					DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
 				}
 			}
 
+		}
+	}
+
+	public function onBeforeDelete() {
+		parent::onBeforeDelete();
+		if ( $this->enabled() ) {
+			$responseMessage = '';
+			DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
 
@@ -27,38 +35,24 @@ class DelectusIndexFileExtension extends DelectusDataObjectExtension {
 		if ( $this->enabled() ) {
 			if ( ! $this->owner->hasExtension( Versioned::class ) ) {
 				$responseMessage = '';
-				$result = DelectusIndexModule::index_service()->addFile( $this->owner, __METHOD__, $responseMessage );
+				DelectusIndexModule::index_service()->addFile( $this->owner, __METHOD__, $responseMessage );
 			}
-		}
-	}
-
-	public function onAfterDelete() {
-		parent::onAfterDelete();
-		if ( $this->enabled() ) {
-			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
-		}
-	}
-
-	public function onBeforePublish() {
-		if ( $this->enabled() ) {
-			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
 
 	public function onAfterPublish() {
 		if ( $this->enabled() ) {
 			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->addFile( $this->owner, __METHOD__, $responseMessage );
+			DelectusIndexModule::index_service()->addFile( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
 
-	public function onAfterUnpublish() {
+	public function onBeforeUnpublish() {
 		if ( $this->enabled() ) {
 			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
+			DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
+
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 class DelectusIndexPageTest extends FunctionalTest {
-	protected static $fixture_file = 'delectus-index-page-test.yml';
+	protected static $fixture_file = 'delectus-tests.yml';
 
 	public function setUp() {
 		parent::setUp();
@@ -14,12 +14,12 @@ class DelectusIndexPageTest extends FunctionalTest {
 		$page->doPublish();
 
 		$requests = DelectusApiRequestModel::get()->filter( [
-			'ModelClass' => 'Page',
-			'ModelToken' => $page->{DelectusIndexPageExtension::ModelTokenFieldName},
+			'ModelClass' => $page->ClassName,
+			'ModelID'    => $page->ID,
 			'Action'     => 'add',
-		] )->count();
+		] );
 
-		$this->assertEquals( 1, $requests, "That a single request has been made to add the page" );
+		$this->assertEquals( 1, $requests->count(), "That a single request has been made to add the page" );
 	}
 
 	public function testUnpublishRemovesFromIndex() {
@@ -27,15 +27,22 @@ class DelectusIndexPageTest extends FunctionalTest {
 		$page = $this->objFromFixture( 'Page', 'page2' );
 		$page->doPublish();
 
+		$requests = DelectusApiRequestModel::get()->filter( [
+			'ModelClass' => $page->ClassName,
+			'ModelID'    => $page->ID,
+			'Action'     => 'add',
+		] );
+		$this->assertEquals( 1, $requests->count(), "That a single request has been made to add the page" );
+
 		$page->doUnpublish();
 
 		$requests = DelectusApiRequestModel::get()->filter( [
-			'ModelClass' => 'Page',
-			'ModelToken' => $page->{DelectusIndexPageExtension::ModelTokenFieldName},
+			'ModelClass' => $page->ClassName,
+			'ModelID'    => $page->ID,
 			'Action'     => 'remove',
-		] )->count();
+		] );
 
-		$this->assertEquals( 1, $requests, "That a single request has been made to add the page" );
+		$this->assertEquals( 1, $requests->count(), "That a single request has been made to remove the page" );
 	}
 
 	public function testDeleteFromLiveRemovesFromIndex() {
@@ -43,31 +50,39 @@ class DelectusIndexPageTest extends FunctionalTest {
 		$page = $this->objFromFixture( 'Page', 'page3' );
 		$page->doPublish();
 
-		$page->deleteFromStage( 'Live' );
 		$requests = DelectusApiRequestModel::get()->filter( [
-			'ModelClass' => 'Page',
-			'ModelToken' => $page->{DelectusIndexPageExtension::ModelTokenFieldName},
-			'Action'     => 'remove',
-		] )->count();
+			'ModelClass' => $page->ClassName,
+			'ModelID'    => $page->ID,
+			'Action'     => 'add',
+		] );
+		$this->assertEquals( 1, $requests->count(), "That a single request has been made to add the page" );
 
-		$this->assertEquals( 1, $requests, "That a single request has been made to add the page" );
+		$page->doDeleteFromLive();
+		$requests = DelectusApiRequestModel::get()->filter( [
+			'ModelClass' => $page->ClassName,
+			'ModelID'    => $page->ID,
+			'Action'     => 'remove',
+		] );
+
+		$this->assertEquals( 1, $requests->count(), "That a single request has been made to remove the page" );
 
 	}
 
-	public function testDeleteFromStageLeavesInIndex() {
-		/** @var Page|Versioned $page */
+	public function testQueuedAddPageTask() {
 		$page = $this->objFromFixture( 'Page', 'page4' );
 		$page->doPublish();
 
-		$page->deleteFromStage( 'Stage' );
+		$queueHandler = new QueueRunner();
+		$queueHandler->runQueue( DelectusIndexJob::queue_name() );
 
-		$requests = DelectusApiRequestModel::get()->filter( [
-			'ModelClass' => 'Page',
-			'ModelToken' => $page->{DelectusIndexPageExtension::ModelTokenFieldName},
-			'Action'     => 'remove',
-		] )->count();
+		/** @var \DelectusApiRequestModel $request */
+		$request = DelectusApiRequestModel::get()->filter( [
+			'ModelClass' => $page->ClassName,
+			'ModelID'    => $page->ID,
+		] )->first();
 
-		$this->assertEquals( 0, $requests, "That a single request has been made to add the page" );
+		$this->assertEquals( $request::StatusCompleted, $request->Status, "that request Status is Completed" );
+		$this->assertEquals( $request::OutcomeSuccess, $request->Outcome, "that request Outcome is Success" );
 
 	}
 }

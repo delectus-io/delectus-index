@@ -9,14 +9,14 @@ class DelectusIndexPageExtension extends DelectusDataObjectExtension {
 	public function onAfterPublish() {
 		if ( $this->enabled() ) {
 			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->addPage( $this->owner, __METHOD__, $responseMessage);
+			DelectusIndexModule::index_service()->addPage( $this->owner, __METHOD__, $responseMessage);
 		}
 	}
 
 	public function onBeforeUnpublish() {
 		if ( $this->enabled() ) {
 			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage);
+			DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage);
 		}
 	}
 
@@ -24,7 +24,7 @@ class DelectusIndexPageExtension extends DelectusDataObjectExtension {
 		parent::onBeforeDelete();
 		if ($this->enabled()) {
 			$responseMessage = '';
-			$result = DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage );
+			DelectusIndexModule::index_service()->removePage( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
 
