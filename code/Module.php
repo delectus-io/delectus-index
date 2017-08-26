@@ -6,5 +6,6 @@
  */
 class DelectusIndexModule extends DelectusModule {
 	const ModuleName = 'delectus-index';
+	const Endpoint = 'index';
 
 }
