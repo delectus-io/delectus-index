@@ -12,6 +12,5 @@ Injector:
       module: %$DelectusIndexModule
 DelectusIndexModule:
   version: 'v1'
-DelectusTransport:
   endpoints:
     index: 'https://api.delectus.io/'
