@@ -5,6 +5,6 @@
  * and by other code on the site.
  */
 class DelectusIndexModule extends DelectusModule {
-
+	const ModuleName = 'delectus-index';
 
 }
