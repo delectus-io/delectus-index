@@ -21,44 +21,54 @@ class DelectusIndexCallbackController extends DelectusCallbackController {
 	];
 
 	public function added( SS_HTTPRequest $request ) {
-		/** @var \DelectusApiRequestModel $model */
-		if ( $model = $this->currentModel( ) ) {
-			$data = Module::decode_data( $request->getBody());
-			if ($data['ResponseCode'] == 200) {
-				$className = $data['ModelClass'];
-
-				if ($fileOrPage = $className::get()->byID($data['ModelID'])) {
-					$fileOrPage->DelectusStatus = self::ActionAdded;
-					$fileOrPage->DelectusUpdated = data('Y-m-d H:i:s');
-					$fileOrPage->write();
-				}
-
-			}
-
-		}
-
+		$this->updateModel( $request, self::ActionAdded);
 	}
 
 	public function removed( SS_HTTPRequest $request ) {
+		$this->updateModel( $request, self::ActionRemoved);
 
 	}
 
 	public function reindexed( SS_HTTPRequest $request ) {
+		$this->updateModel( $request, self::ActionReindexed);
 
 	}
 
 	public function blocked( SS_HTTPRequest $request ) {
+		$this->updateModel( $request, self::ActionBlocked );
 
 	}
 
 	public function unblocked( SS_HTTPRequest $request ) {
+		$this->updateModel( $request, self::ActionUnBlocked );
 
+	}
+
+	protected function updateModel(SS_HTTPRequest $request, $action) {
+		/** @var \DelectusApiRequestModel $model */
+		if ( $model = $this->currentModel() ) {
+
+			$transport = DelectusIndexModule::transport();
+
+			$data = $transport->decode( $request->getBody(), $this->getRequest()->getHeader( $transport::ContentTypeHeader ) );
+
+			if ( $data['ResponseCode'] == 200 ) {
+				$className = $data['ModelClass'];
+
+				if ( $fileOrPage = $className::get()->byID( $data['ModelID'] ) ) {
+					$fileOrPage->{DelectusModelExtension::StatusFieldName}      = self::ActionAdded;
+					$fileOrPage->{DelectusModelExtension::LastUpdatedFieldName} = date( 'Y-m-d H:i:s' );
+					$fileOrPage->write();
+				}
+			}
+
+		}
 	}
 
 	/**
 	 * Return a client from the request (either by auth token or login)
 	 *
-	 * @return \Delectus\Core\Models\Client
+	 * @return null
 	 */
 	public function currentClient( ) {
 		return null;
@@ -74,14 +84,17 @@ class DelectusIndexCallbackController extends DelectusCallbackController {
 	 */
 	public function currentModel( ) {
 		$request     = $this->getRequest();
-		$data        = Module::decode_data( $request->getBody() );
+		$transport = DelectusModule::transport();
+
+		$data        = $transport->decode( $request->getBody(), $request->getHeader( $transport::ContentTypeHeader) );
+
 		return DelectusApiRequestModel::get()->find(DelectusApiRequestModel::RequestTokenKey, $data['RequestToken']);
 	}
 
 	/**
 	 * Return the client for the current model (resolve relationships from currentModel to its Client)
 	 *
-	 * @return \Delectus\Core\Models\Client
+	 * @return
 	 */
 	public function currentModelClient() {
 		return null;

@@ -1,10 +1,11 @@
 <?php
 
 /**
- * DelectusPageExtension added to Page class provides fields needed by Delectus to track indexing and search and hooks to make sure
- * changes made to pages in the CMS are advertised to delectus
+ * DelectusIndexFileExtension adds event handlers for onBeforeWrite, onAfterWrite, onAfterPublish etc
  */
 class DelectusIndexPageExtension extends DataExtension {
+
+	private static $delectus_enabled = true;
 
 	public function onAfterPublish() {
 		if ( $this->enabled() ) {

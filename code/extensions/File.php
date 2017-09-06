@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * DelectusIndexFileExtension adds event handlers for onBeforeWrite, onAfterWrite, onAfterPublish etc
+ */
 class DelectusIndexFileExtension extends \DataExtension {
 
 	// set to false to disable Delectus functions at runtime, e.g. during testing other functionality
