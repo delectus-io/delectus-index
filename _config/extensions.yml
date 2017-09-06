@@ -6,6 +6,6 @@ After:
 File:
   extensions:
     - DelectusIndexFileExtension
-Page:
+SiteTree:
   extensions:
     - DelectusIndexPageExtension
