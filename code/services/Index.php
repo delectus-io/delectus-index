@@ -7,6 +7,8 @@ class DelectusIndexService extends DelectusApiRequestService {
 	// key of endpoint to lookup in config.endpoints
 	const Endpoint = 'index';
 
+	const ApiRequestClassName = DelectusIndexApiRequestModel::class;
+
 	// actions which will be called on the Delectus api service to perform some work
 	const ActionAdd     = 'add';
 	const ActionRemove  = 'remove';
@@ -60,7 +62,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 					$request->write();
 
 				} else {
-					$resultMessage = _t(
+					$responseMessage = _t(
 						'Delectus.ShowInSearchMessage',
 						"{type} {id} ShowInSearch precludes indexing",
 						[
@@ -144,7 +146,7 @@ class DelectusIndexService extends DelectusApiRequestService {
 			if ( $file = static::resolve_file( $fileOrLinkOrID ) ) {
 				$request  = static::enqueue_request( $file, $source, self::ActionRemove );
 
-				$response = static::create()->makeRequest( $request );
+				$response = $this->makeRequest( $request );
 
 				$request->write();
 			}
