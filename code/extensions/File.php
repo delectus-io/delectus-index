@@ -12,9 +12,24 @@ class DelectusIndexFileExtension extends \DataExtension {
 		return $this->owner->ParentID != 0;
 	}
 
+	public function shouldRemoveFromIndex() {
+		return $this->enabled() &&
+		       $this->owner->isInDB()
+		       && $this->owner->isChanged()
+		       && $this->owner->{DelectusFileExtension::LastUpdatedFieldName};
+	}
+
+	public function shouldAddToIndex() {
+		$resourcesFolder = \DelectusModule::resources_folder($this->owner)->Filename;
+
+		return $this->enabled()
+			&& $this->owner->isChanged()
+			&& strtolower(substr($this->owner->Filename, 0, strlen($resourcesFolder))) == strtolower($resourcesFolder);
+	}
+
 	public function onBeforeWrite() {
 		parent::onBeforeWrite();
-		if ( $this->owner->isChanged() ) {
+		if ( $this->shouldRemoveFromIndex() ) {
 			if ( $this->enabled() ) {
 				if ( ! $this->owner->hasExtension( Versioned::class ) ) {
 					$responseMessage = '';
@@ -27,7 +42,7 @@ class DelectusIndexFileExtension extends \DataExtension {
 
 	public function onBeforeDelete() {
 		parent::onBeforeDelete();
-		if ( $this->enabled() ) {
+		if ( $this->shouldRemoveFromIndex()) {
 			$responseMessage = '';
 			DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
 		}
@@ -35,7 +50,7 @@ class DelectusIndexFileExtension extends \DataExtension {
 
 	public function onAfterWrite() {
 		parent::onAfterWrite();
-		if ( $this->enabled() ) {
+		if ( $this->shouldAddToIndex() ) {
 			if ( ! $this->owner->hasExtension( Versioned::class ) ) {
 				$responseMessage = '';
 				DelectusIndexModule::index_service()->addFile( $this->owner, __METHOD__, $responseMessage );
@@ -44,14 +59,14 @@ class DelectusIndexFileExtension extends \DataExtension {
 	}
 
 	public function onAfterPublish() {
-		if ( $this->enabled() ) {
+		if ( $this->shouldAddToIndex() ) {
 			$responseMessage = '';
 			DelectusIndexModule::index_service()->addFile( $this->owner, __METHOD__, $responseMessage );
 		}
 	}
 
 	public function onBeforeUnpublish() {
-		if ( $this->enabled() ) {
+		if ( $this->shouldRemoveFromIndex() ) {
 			$responseMessage = '';
 			DelectusIndexModule::index_service()->removeFile( $this->owner, __METHOD__, $responseMessage );
 		}
