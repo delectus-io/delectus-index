@@ -3,4 +3,4 @@ Name: delectus-index-routes
 ---
 Director:
   rules:
-    'delectus/$Version!/$Action!': DelectusIndexCallbackController
+    'delectus-callback/index/$Version!/$Action!': DelectusIndexCallbackController
